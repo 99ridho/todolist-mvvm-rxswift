@@ -2,7 +2,7 @@
 
 Learning MVVM concept with RxSwift and use CoreData to provide persistent storage.
 
-WIP : remove todolist (ViewModel complete), next integrate to View :D
+~~WIP : remove todolist (ViewModel complete), next integrate to View :D~~
 
 ### Usage
 
@@ -14,4 +14,4 @@ WIP : remove todolist (ViewModel complete), next integrate to View :D
 
 How the UI react with data changes
 
-![gif](https://media.giphy.com/media/xUPGcnzaZt4lXe5dG8/giphy.gif)
+![gif](https://media.giphy.com/media/3og0Iz0DkYqkzvuV68/giphy.gif)
