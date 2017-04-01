@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SchemeUserState</key>
+	<dict>
+		<key>Todolist-MVVM.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>7F988BBC1E8FC7D6000AB5F1</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7FFA752A1E8FAFDD00874A74</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7FFA75411E8FAFDE00874A74</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7FFA754C1E8FAFDE00874A74</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
+</dict>
+</plist>
