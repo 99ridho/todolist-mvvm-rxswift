@@ -35,6 +35,7 @@ class TodoListViewController: UIViewController {
         }
         .addDisposableTo(disposeBag)
         
+        todoListTableView.rx.setDelegate(self).addDisposableTo(disposeBag)
     }
     
     private func setupTodoListTableViewCellTappedOptions() {
@@ -67,4 +68,19 @@ class TodoListViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+}
+
+extension TodoListViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let editAction = UITableViewRowAction(style: .normal, title: "Edit", handler: { (action, indexPath) in
+        
+        })
+        let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete", handler: { (action, indexPath) in
+            self.todoListViewModel.removeTodo(withId: indexPath.row)
+        })
+        
+        return [editAction, deleteAction]
+    }
+    
 }
