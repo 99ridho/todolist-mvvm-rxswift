@@ -9,3 +9,9 @@ WIP : remove todolist :D
 * Clone
 * `pod install`
 * Open xcworkspace
+
+### Screenshoot
+
+How the UI react with data changes
+
+![gif](https://media.giphy.com/media/xUA7aR36gj8Msq1oeA/giphy.gif)
