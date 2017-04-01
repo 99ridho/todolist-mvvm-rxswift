@@ -36,7 +36,14 @@ class TodoListViewModelTests: XCTestCase {
         print("TODOS : ", vm.getTodos().value)
         XCTAssert(vm.getTodos().value.count == oldCount + 2)
     }
-//
+    
+    func testRemoveTodo() {
+        let oldCount = vm.getTodos().value.count
+        
+        vm.removeTodo(withId: 0)
+        
+        XCTAssert(vm.getTodos().value.count == oldCount - 1)
+    }
     
     func testToggleTodo() {
         let isCompleted = vm.getTodos().value[0].isCompleted

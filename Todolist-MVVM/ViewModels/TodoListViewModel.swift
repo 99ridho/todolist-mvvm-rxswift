@@ -9,23 +9,22 @@ class TodoListViewModel {
     private var todosFetchedFromCoreData = [Todo]()
     
     init() {
-        fetchDataAndUpdateDataToObservableTodos()
+        fetchTodosAndUpdateObservableTodos()
     }
     
     public func getTodos() -> Variable<[Todo]> {
         return todos
     }
     
-    private func fetchDataAndUpdateDataToObservableTodos() {
+    // MARK: - fetching Todos from Core Data and update observable todos
+    private func fetchTodosAndUpdateObservableTodos() {
         let managedObjectContext = delegate.persistentContainer.viewContext
         
-        let todoFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Todo")
+        let todoFetchRequest = Todo.todoFetchRequest()
         todoFetchRequest.returnsObjectsAsFaults = false
     
         do {
-            todosFetchedFromCoreData = try managedObjectContext.fetch(todoFetchRequest) as! [Todo]
-            
-            todos.value = todosFetchedFromCoreData
+            todos.value = try managedObjectContext.fetch(todoFetchRequest) 
             
             print(todos.value)
         } catch {
@@ -33,6 +32,7 @@ class TodoListViewModel {
         }
     }
     
+    // MARK: - add new todo from Core Data
     public func addTodo(withTodo todo: String) {
         let managedObjectContext = delegate.persistentContainer.viewContext
         let newTodo = NSEntityDescription.insertNewObject(forEntityName: "Todo", into: managedObjectContext) as! Todo
@@ -42,24 +42,38 @@ class TodoListViewModel {
         
         do {
             try managedObjectContext.save()
-            fetchDataAndUpdateDataToObservableTodos()
+            fetchTodosAndUpdateObservableTodos()
         } catch {
             fatalError("error saving data")
         }
     }
     
+    // MARK: - toggle selected todo's isCompleted value
     public func toggleTodoIsCompleted(withId id: Int) {
         let managedObjectContext = delegate.persistentContainer.viewContext
-        todosFetchedFromCoreData[id].isCompleted = !todosFetchedFromCoreData[id].isCompleted
+        
+        todos.value[id].isCompleted = !todos.value[id].isCompleted
         
         do {
             try managedObjectContext.save()
-            fetchDataAndUpdateDataToObservableTodos()
+            fetchTodosAndUpdateObservableTodos()
         } catch {
             fatalError("error change data")
         }
     }
     
-    // TODO : remove data
+    // MARK: - remove specified todo from Core Data
+    public func removeTodo(withId id: Int) {
+        let managedObjectContext = delegate.persistentContainer.viewContext
+        
+        managedObjectContext.delete(todos.value[id])
+        
+        do {
+            try managedObjectContext.save()
+            fetchTodosAndUpdateObservableTodos()
+        } catch {
+            fatalError("error delete data")
+        }
+    }
     
 }
