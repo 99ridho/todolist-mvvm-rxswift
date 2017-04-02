@@ -2,11 +2,10 @@ import Foundation
 import RxSwift
 import CoreData
 
-class TodoListViewModel {
+struct TodoListViewModel {
     
     private var todos = Variable<[Todo]>([])
     private var delegate = UIApplication.shared.delegate as! AppDelegate
-    private var todosFetchedFromCoreData = [Todo]()
     
     init() {
         fetchTodosAndUpdateObservableTodos()
