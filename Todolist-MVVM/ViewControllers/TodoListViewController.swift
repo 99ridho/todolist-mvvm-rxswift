@@ -16,7 +16,8 @@ class TodoListViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         populateTodoListTableView()
-        setupTodoListTableViewCellTappedOptions()
+        setupTodoListTableViewCellWhenTapped()
+        setupTodoListTableViewCellWhenDeleted()
     }
     
     private func populateTodoListTableView() {
@@ -35,14 +36,21 @@ class TodoListViewController: UIViewController {
         }
         .addDisposableTo(disposeBag)
         
-        todoListTableView.rx.setDelegate(self).addDisposableTo(disposeBag)
     }
     
-    private func setupTodoListTableViewCellTappedOptions() {
+    private func setupTodoListTableViewCellWhenTapped() {
         todoListTableView.rx.itemSelected
             .subscribe(onNext: { indexPath in
                 self.todoListTableView.deselectRow(at: indexPath, animated: false)
                 self.todoListViewModel.toggleTodoIsCompleted(withId: indexPath.row)
+            })
+            .addDisposableTo(disposeBag)
+    }
+    
+    private func setupTodoListTableViewCellWhenDeleted() {
+        todoListTableView.rx.itemDeleted
+            .subscribe(onNext : { indexPath in
+                self.todoListViewModel.removeTodo(withId: indexPath.row)
             })
             .addDisposableTo(disposeBag)
     }
@@ -53,7 +61,7 @@ class TodoListViewController: UIViewController {
         addTodoAlert.addTextField(configurationHandler: nil)
         addTodoAlert.addAction(UIAlertAction(title: "Add", style: .default, handler: { al in
             let todoString = addTodoAlert.textFields![0].text
-            if todoString != nil || !todoString!.isEmpty {
+            if !(todoString!.isEmpty) {
                 self.todoListViewModel.addTodo(withTodo: todoString!)
             }
         }))
@@ -68,19 +76,4 @@ class TodoListViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-}
-
-extension TodoListViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let editAction = UITableViewRowAction(style: .normal, title: "Edit", handler: { (action, indexPath) in
-        
-        })
-        let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete", handler: { (action, indexPath) in
-            self.todoListViewModel.removeTodo(withId: indexPath.row)
-        })
-        
-        return [editAction, deleteAction]
-    }
-    
 }
