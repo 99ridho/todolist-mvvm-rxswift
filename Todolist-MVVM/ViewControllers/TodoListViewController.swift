@@ -42,7 +42,7 @@ class TodoListViewController: UIViewController {
         todoListTableView.rx.itemSelected
             .subscribe(onNext: { indexPath in
                 self.todoListTableView.deselectRow(at: indexPath, animated: false)
-                self.todoListViewModel.toggleTodoIsCompleted(withId: indexPath.row)
+                self.todoListViewModel.toggleTodoIsCompleted(withIndex: indexPath.row)
             })
             .addDisposableTo(disposeBag)
     }
@@ -50,7 +50,7 @@ class TodoListViewController: UIViewController {
     private func setupTodoListTableViewCellWhenDeleted() {
         todoListTableView.rx.itemDeleted
             .subscribe(onNext : { indexPath in
-                self.todoListViewModel.removeTodo(withId: indexPath.row)
+                self.todoListViewModel.removeTodo(withIndex: indexPath.row)
             })
             .addDisposableTo(disposeBag)
     }
