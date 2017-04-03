@@ -8,22 +8,22 @@
 
 import Foundation
 import CoreData
-import UIKit
+import RxSwift
 
 class TodoDataAccessProvider {
     
-    private var todosFromCoreData : [Todo]
+    private var todosFromCoreData = Variable<[Todo]>([])
     private var managedObjectContext : NSManagedObjectContext
     
     init() {
         let delegate = UIApplication.shared.delegate as! AppDelegate
-        todosFromCoreData = [Todo]()
+        todosFromCoreData.value = [Todo]()
         managedObjectContext = delegate.persistentContainer.viewContext
         
-        todosFromCoreData = fetchData()
+        todosFromCoreData.value = fetchData()
     }
     
-    public func fetchData() -> [Todo] {
+    private func fetchData() -> [Todo] {
         let todoFetchRequest = Todo.todoFetchRequest()
         todoFetchRequest.returnsObjectsAsFaults = false
         
@@ -35,6 +35,11 @@ class TodoDataAccessProvider {
         
     }
     
+    public func fetchObservableData() -> Observable<[Todo]> {
+        todosFromCoreData.value = fetchData()
+        return todosFromCoreData.asObservable()
+    }
+    
     public func addTodo(withTodo todo: String) {
         let newTodo = NSEntityDescription.insertNewObject(forEntityName: "Todo", into: managedObjectContext) as! Todo
         
@@ -43,18 +48,18 @@ class TodoDataAccessProvider {
         
         do {
             try managedObjectContext.save()
-            todosFromCoreData = fetchData()
+            todosFromCoreData.value = fetchData()
         } catch {
             fatalError("error saving data")
         }
     }
     
     public func toggleTodoIsCompleted(withIndex index: Int) {
-        todosFromCoreData[index].isCompleted = !todosFromCoreData[index].isCompleted
+        todosFromCoreData.value[index].isCompleted = !todosFromCoreData.value[index].isCompleted
         
         do {
             try managedObjectContext.save()
-            todosFromCoreData = fetchData()
+            todosFromCoreData.value = fetchData()
         } catch {
             fatalError("error change data")
         }
@@ -62,11 +67,11 @@ class TodoDataAccessProvider {
     }
     
     public func removeTodo(withIndex index: Int) {
-        managedObjectContext.delete(todosFromCoreData[index])
+        managedObjectContext.delete(todosFromCoreData.value[index])
         
         do {
             try managedObjectContext.save()
-            todosFromCoreData = fetchData()
+            todosFromCoreData.value = fetchData()
         } catch {
             fatalError("error delete data")
         }
