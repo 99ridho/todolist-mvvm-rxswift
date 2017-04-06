@@ -23,6 +23,7 @@ class TodoDataAccessProvider {
         todosFromCoreData.value = fetchData()
     }
     
+    // MARK: - fetching Todos from Core Data and update observable todos
     private func fetchData() -> [Todo] {
         let todoFetchRequest = Todo.todoFetchRequest()
         todoFetchRequest.returnsObjectsAsFaults = false
@@ -35,11 +36,13 @@ class TodoDataAccessProvider {
         
     }
     
+    // MARK: - return observable todo
     public func fetchObservableData() -> Observable<[Todo]> {
         todosFromCoreData.value = fetchData()
         return todosFromCoreData.asObservable()
     }
     
+    // MARK: - add new todo from Core Data
     public func addTodo(withTodo todo: String) {
         let newTodo = NSEntityDescription.insertNewObject(forEntityName: "Todo", into: managedObjectContext) as! Todo
         
@@ -54,6 +57,7 @@ class TodoDataAccessProvider {
         }
     }
     
+    // MARK: - toggle selected todo's isCompleted value
     public func toggleTodoIsCompleted(withIndex index: Int) {
         todosFromCoreData.value[index].isCompleted = !todosFromCoreData.value[index].isCompleted
         
@@ -66,6 +70,7 @@ class TodoDataAccessProvider {
 
     }
     
+    // MARK: - remove specified todo from Core Data
     public func removeTodo(withIndex index: Int) {
         managedObjectContext.delete(todosFromCoreData.value[index])
         

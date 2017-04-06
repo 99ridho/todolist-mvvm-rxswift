@@ -20,6 +20,7 @@ class TodoListViewController: UIViewController {
         setupTodoListTableViewCellWhenDeleted()
     }
     
+    // MARK: - perform a binding from observableTodo from ViewModel to todoListTableView
     private func populateTodoListTableView() {
         var observableTodos = todoListViewModel.getTodos().asObservable()
         
@@ -38,6 +39,7 @@ class TodoListViewController: UIViewController {
         
     }
     
+    // MARK: - subscribe to todoListTableView when item has been selected, then toggle todo to persistent storage via viewmodel
     private func setupTodoListTableViewCellWhenTapped() {
         todoListTableView.rx.itemSelected
             .subscribe(onNext: { indexPath in
@@ -47,6 +49,7 @@ class TodoListViewController: UIViewController {
             .addDisposableTo(disposeBag)
     }
     
+    // MARK: - subscribe to todoListTableView when item has been deleted, then remove todo to persistent storage via viewmodel
     private func setupTodoListTableViewCellWhenDeleted() {
         todoListTableView.rx.itemDeleted
             .subscribe(onNext : { indexPath in
@@ -55,6 +58,7 @@ class TodoListViewController: UIViewController {
             .addDisposableTo(disposeBag)
     }
 
+    // MARK: - event handling when add button tapped, and add todo to persistent storage via viewmodel
     @IBAction func buttonAddTodoTapped(_ sender: UIBarButtonItem) {
         let addTodoAlert = UIAlertController(title: "Add Todo", message: "Enter your string", preferredStyle: .alert)
         
