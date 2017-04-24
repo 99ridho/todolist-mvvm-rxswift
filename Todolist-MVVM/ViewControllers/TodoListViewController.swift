@@ -5,6 +5,7 @@ import RxCocoa
 class TodoListViewController: UIViewController {
 
     @IBOutlet weak var todoListTableView: UITableView!
+    @IBOutlet weak var addTodoButton: UIBarButtonItem!
     
     var todoListViewModel = TodoListViewModel()
     
@@ -18,6 +19,7 @@ class TodoListViewController: UIViewController {
         populateTodoListTableView()
         setupTodoListTableViewCellWhenTapped()
         setupTodoListTableViewCellWhenDeleted()
+        setupActionWhenButtonAddTodoTapped()
     }
     
     // MARK: - perform a binding from observableTodo from ViewModel to todoListTableView
@@ -59,20 +61,26 @@ class TodoListViewController: UIViewController {
     }
 
     // MARK: - event handling when add button tapped, and add todo to persistent storage via viewmodel
-    @IBAction func buttonAddTodoTapped(_ sender: UIBarButtonItem) {
-        let addTodoAlert = UIAlertController(title: "Add Todo", message: "Enter your string", preferredStyle: .alert)
-        
-        addTodoAlert.addTextField(configurationHandler: nil)
-        addTodoAlert.addAction(UIAlertAction(title: "Add", style: .default, handler: { al in
-            let todoString = addTodoAlert.textFields![0].text
-            if !(todoString!.isEmpty) {
-                self.todoListViewModel.addTodo(withTodo: todoString!)
-            }
-        }))
-        
-        addTodoAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
-        
-        self.present(addTodoAlert, animated: true, completion: nil)
+    func setupActionWhenButtonAddTodoTapped() {
+        addTodoButton.rx.tap
+            .subscribe(
+                onNext: {
+                    let addTodoAlert = UIAlertController(title: "Add Todo", message: "Enter your string", preferredStyle: .alert)
+                    
+                    addTodoAlert.addTextField(configurationHandler: nil)
+                    addTodoAlert.addAction(UIAlertAction(title: "Add", style: .default, handler: { al in
+                        let todoString = addTodoAlert.textFields![0].text
+                        if !(todoString!.isEmpty) {
+                            self.todoListViewModel.addTodo(withTodo: todoString!)
+                        }
+                    }))
+                    
+                    addTodoAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+                    
+                    self.present(addTodoAlert, animated: true, completion: nil)
+                }
+            )
+            .addDisposableTo(disposeBag)
     }
     
     override func didReceiveMemoryWarning() {
